@@ -1,6 +1,8 @@
 {
   "version": 2,
   "projects": {
-    "api": "apps/api"
+    "api": "apps/api",
+    "authz": "libs/authz",
+    "user": "libs/user"
   }
 }
