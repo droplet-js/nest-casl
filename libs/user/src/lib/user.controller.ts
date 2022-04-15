@@ -6,11 +6,13 @@ import {
   Patch,
   Param,
   Delete,
+  ForbiddenException,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { AbilityFactory } from '@nest-casl/authz';
+import { AbilityFactory, Action } from '@nest-casl/authz';
+import { User } from './entities/user.entity';
 
 @Controller('users')
 export class UserController {
@@ -21,6 +23,14 @@ export class UserController {
 
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
+    const user = { id: 1, isAdmin: false }; //req.user
+    const ability = this.abilityFactory.defineAbility(user);
+
+    const isAllowed = ability.can(Action.Create, User);
+
+    if (!isAllowed) {
+      throw new ForbiddenException('You are not allowed to create a user');
+    }
     return this.userService.create(createUserDto);
   }
 
