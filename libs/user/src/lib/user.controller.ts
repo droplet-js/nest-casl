@@ -18,6 +18,7 @@ import {
   AbilityFactory,
   Action,
   CheckAbilities,
+  ReadUserAbility,
 } from '@nest-casl/authz';
 import { User } from './entities/user.entity';
 import { ForbiddenError } from '@casl/ability';
@@ -42,11 +43,15 @@ export class UserController {
   }
 
   @Get()
+  @UseGuards(AbilitiesGuard)
+  @CheckAbilities(new ReadUserAbility())
   findAll() {
     return this.userService.findAll();
   }
 
   @Get(':id')
+  @UseGuards(AbilitiesGuard)
+  @CheckAbilities(new ReadUserAbility())
   findOne(@Param('id') id: string) {
     return this.userService.findOne(+id);
   }

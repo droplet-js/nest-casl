@@ -9,6 +9,7 @@ import {
 } from '@nestjs/common';
 import { AbilityFactory } from '../ability.factory';
 import { Reflector } from '@nestjs/core';
+// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import { currentUser } from '@nest-casl/user';
 
 @Injectable()
