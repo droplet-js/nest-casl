@@ -4,6 +4,7 @@ import {
   AbilityClass,
   ExtractSubjectType,
 } from '@casl/ability';
+// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import { User } from '@nest-casl/user';
 import { Injectable } from '@nestjs/common';
 import { Action } from './enum/action.enum';
@@ -27,6 +28,9 @@ export class AbilityFactory {
       can(Action.Read, 'all');
       cannot(Action.Create, User).because(
         `You are not allowed to create a user`
+      );
+      cannot(Action.Delete, User).because(
+        "You're not authorized to delete a user"
       );
     }
 

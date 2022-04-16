@@ -7,11 +7,18 @@ import {
   Param,
   Delete,
   ForbiddenException,
+  UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { AbilityFactory, Action } from '@nest-casl/authz';
+// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
+import {
+  AbilitiesGuard,
+  AbilityFactory,
+  Action,
+  CheckAbilities,
+} from '@nest-casl/authz';
 import { User } from './entities/user.entity';
 import { ForbiddenError } from '@casl/ability';
 
@@ -57,6 +64,8 @@ export class UserController {
   }
 
   @Delete(':id')
+  @UseGuards(AbilitiesGuard)
+  @CheckAbilities({ action: Action.Delete, subject: User })
   remove(@Param('id') id: string) {
     return this.userService.remove(+id);
   }
