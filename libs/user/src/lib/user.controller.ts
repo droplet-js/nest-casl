@@ -13,6 +13,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { AbilityFactory, Action } from '@nest-casl/authz';
 import { User } from './entities/user.entity';
+import { ForbiddenError } from '@casl/ability';
 
 @Controller('users')
 export class UserController {
@@ -28,10 +29,15 @@ export class UserController {
 
     const isAllowed = ability.can(Action.Create, User);
 
-    if (!isAllowed) {
-      throw new ForbiddenException('You are not allowed to create a user');
+    try {
+      ForbiddenError.from(ability).throwUnlessCan(Action.Create, User);
+
+      return this.userService.create(createUserDto);
+    } catch (err) {
+      if (err instanceof ForbiddenError) {
+        throw new ForbiddenException(err.message);
+      }
     }
-    return this.userService.create(createUserDto);
   }
 
   @Get()

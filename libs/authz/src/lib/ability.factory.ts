@@ -22,6 +22,9 @@ export class AbilityFactory {
       can(Action.Manage, 'all');
     } else {
       can(Action.Read, 'all');
+      cannot(Action.Create, User).because(
+        `You are not allowed to create a user`
+      );
     }
 
     return build({
