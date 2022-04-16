@@ -24,15 +24,9 @@ export class UserController {
 
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
-    const user = { id: 1, isAdmin: false }; //req.user
-    const ability = this.abilityFactory.defineAbility(user);
-
-    const isAllowed = ability.can(Action.Create, User);
-
+    const user = { id: 1, isAdmin: false, orgId: 1 }; //req.user
     try {
-      ForbiddenError.from(ability).throwUnlessCan(Action.Create, User);
-
-      return this.userService.create(createUserDto);
+      return this.userService.create(createUserDto, user);
     } catch (err) {
       if (err instanceof ForbiddenError) {
         throw new ForbiddenException(err.message);
@@ -52,7 +46,14 @@ export class UserController {
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(+id, updateUserDto);
+    const user = { id: 1, isAdmin: true, orgId: 1 }; //req.user
+    try {
+      return this.userService.update(+id, updateUserDto, user);
+    } catch (err) {
+      if (err instanceof ForbiddenError) {
+        throw new ForbiddenException(err.message);
+      }
+    }
   }
 
   @Delete(':id')

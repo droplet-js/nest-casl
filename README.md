@@ -12,5 +12,5 @@
 
 ### Access:
 
-- If isAdmin: create, read, update, delete
+- If isAdmin: create, read, update, delete, IF in same organization
 - if NOT admin: read
